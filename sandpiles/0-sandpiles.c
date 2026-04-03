@@ -1,84 +1,16 @@
-#include "sandpiles.h"
 #include <stdio.h>
+#include "sandpiles.h"
+
+/* ==== Internal helpers (file-local) ==== */
 
 /**
- * is_stable - checks if a 3x3 sandpile grid is stable
- * @grid: grid to check
- * Return: 1 if stable, 0 otherwise
+ * print_grid - Print a 3x3 grid as required
+ * @grid: 3x3 integer matrix
  */
-int is_stable(int grid[3][3])
+static void print_grid(int grid[3][3])
 {
 	int i, j;
 
-	for (i = 0; i < 3; i++)
-	{
-		for (j = 0; j < 3; j++)
-		{
-			if (grid[i][j] > 3)
-				return (0);
-		}
-	}
-	return (1);
-}
-
-/**
- * topple - perform one toppling round on the grid
- * @grid: grid to topple
- */
-void topple(int grid[3][3])
-{
-	int i;
-	int j;
-	int temp[3][3] = {0};
-
-	for (i = 0; i < 3; i++)
-	{
-		for (j = 0; j < 3; j++)
-		{
-			if (grid[i][j] > 3)
-			{
-				int grains = grid[i][j] / 4;
-				temp[i][j] -= grains * 4;
-
-				if (i > 0)
-				{
-					temp[i - 1][j] += grains;
-				}
-				if (i < 2)
-				{
-					temp[i + 1][j] += grains;
-				}
-				if (j > 0)
-				{
-					temp[i][j - 1] += grains;
-				}
-				if (j < 2)
-				{
-					temp[i][j + 1] += grains;
-				}
-			}
-		}
-	}
-
-	/* apply changes to original grid */
-	for (i = 0; i < 3; i++)
-	{
-		for (j = 0; j < 3; j++)
-		{
-			grid[i][j] += temp[i][j];
-		}
-	}
-}
-
-/**
- * print_grid - prints a 3x3 grid
- * @grid: grid to print
- */
-void print_grid(int grid[3][3])
-{
-	int i, j;
-
-	printf("=\n");
 	for (i = 0; i < 3; i++)
 	{
 		for (j = 0; j < 3; j++)
@@ -92,23 +24,84 @@ void print_grid(int grid[3][3])
 }
 
 /**
- * sandpiles_sum - computes the sum of two sandpiles and stabilizes
- * @grid1: first 3x3 grid (will hold result)
- * @grid2: second 3x3 grid
+ * is_stable - Check whether a 3x3 sandpile is stable
+ * @grid: 3x3 integer matrix
+ *
+ * Return: 1 if stable (no cell > 3), otherwise 0
  */
-void sandpiles_sum(int grid1[3][3], int grid2[3][3])
+static int is_stable(int grid[3][3])
 {
 	int i, j;
 
-	/* sum grid2 into grid1 */
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+			if (grid[i][j] > 3)
+				return (0);
+	return (1);
+}
+
+/**
+ * add_grids - Element-wise addition of two 3x3 grids (grid1 += grid2)
+ * @grid1: left matrix, also output
+ * @grid2: right matrix
+ */
+static void add_grids(int grid1[3][3], int grid2[3][3])
+{
+	int i, j;
+
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < 3; j++)
 			grid1[i][j] += grid2[i][j];
+}
 
-	/* stabilize */
+/**
+ * topple_once - Perform one toppling round on a 3x3 grid
+ * @grid: 3x3 integer matrix, modified in place
+ */
+static void topple_once(int grid[3][3])
+{
+	int i, j;
+	int acc[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			if (grid[i][j] > 3)
+			{
+				grid[i][j] -= 4;
+
+				if (i - 1 >= 0)
+					acc[i - 1][j] += 1;
+				if (i + 1 < 3)
+					acc[i + 1][j] += 1;
+				if (j - 1 >= 0)
+					acc[i][j - 1] += 1;
+				if (j + 1 < 3)
+					acc[i][j + 1] += 1;
+			}
+		}
+	}
+
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+			grid[i][j] += acc[i][j];
+}
+
+/**
+ * sandpiles_sum - Compute the sum of two 3x3 sandpiles and stabilize result
+ * @grid1: left matrix; will contain the stable result
+ * @grid2: right matrix
+ */
+void sandpiles_sum(int grid1[3][3], int grid2[3][3])
+{
+	add_grids(grid1, grid2);
+
+	/* Repeatedly topple until stable */
 	while (!is_stable(grid1))
 	{
+		printf("=\n");
 		print_grid(grid1);
-		topple(grid1);
+		topple_once(grid1);
 	}
 }
