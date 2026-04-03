@@ -1,8 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "lists.h"
 
 /**
  * reverse_list - reverses a linked list
- * @head: pointer to the head of the list
+ * @head: pointer to head of list
  * Return: new head of reversed list
  */
 listint_t *reverse_list(listint_t *head)
