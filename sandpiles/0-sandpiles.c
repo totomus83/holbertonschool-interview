@@ -61,11 +61,11 @@ void topple(int grid[3][3])
     }
 
 	/* apply changes to original grid */
-	for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
 	{
-		for (j = 0; j < 3; j++)
+        for (j = 0; j < 3; j++)
 		{
-			grid[i][j] += temp[i][j];
+            grid[i][j] += temp[i][j];
 		}
 	}
 }
@@ -79,7 +79,7 @@ void print_grid(int grid[3][3])
 	int i, j;
 
 	printf("=\n");
-	for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
 	{
 		for (j = 0; j < 3; j++)
 		{
@@ -101,8 +101,8 @@ void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 	int i, j;
 
 	/* sum grid2 into grid1 */
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
 			grid1[i][j] += grid2[i][j];
 
 	/* stabilize */
