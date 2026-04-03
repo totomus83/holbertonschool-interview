@@ -27,25 +27,38 @@ int is_stable(int grid[3][3])
  */
 void topple(int grid[3][3])
 {
-	int i, j;
-	int temp[3][3] = {0};
+    int i;
+    int j;
+    int temp[3][3] = {0};
 
-	/* compute how much each cell sends to neighbors */
-	for (i = 0; i < 3; i++)
-	{
-		for (j = 0; j < 3; j++)
-		{
-			if (grid[i][j] > 3)
-			{
-				int grains = grid[i][j] / 4;
-				temp[i][j] -= grains * 4;
-				if (i > 0)    temp[i - 1][j] += grains;
-				if (i < 2)    temp[i + 1][j] += grains;
-				if (j > 0)    temp[i][j - 1] += grains;
-				if (j < 2)    temp[i][j + 1] += grains;
-			}
-		}
-	}
+    for (i = 0; i < 3; i++)
+    {
+	    for (j = 0; j < 3; j++)
+	    {
+		    if (grid[i][j] > 3)
+		    {
+			    int grains = grid[i][j] / 4;
+			    temp[i][j] -= grains * 4;
+
+			    if (i > 0)
+			    {
+				    temp[i - 1][j] += grains;
+			    }
+			    if (i < 2)
+			    {
+				    temp[i + 1][j] += grains;
+			    }
+			    if (j > 0)
+			    {
+				    temp[i][j - 1] += grains;
+			    }
+			    if (j < 2)
+			    {
+				    temp[i][j + 1] += grains;
+			    }
+		    }
+	    }
+    }
 
 	/* apply changes to original grid */
 	for (i = 0; i < 3; i++)
