@@ -12,13 +12,13 @@ int slide_line(int *line, size_t size, int direction)
 {
     size_t i, j;
 
-    if (!line || size == 0 ||
+    if (!line || size < 1 ||
         (direction != SLIDE_LEFT && direction != SLIDE_RIGHT))
         return (0);
 
     if (direction == SLIDE_LEFT)
     {
-        /* Step 1: shift left (remove zeros) */
+        /* Step 1: shift left */
         for (i = 0; i < size; i++)
         {
             if (line[i] == 0)
@@ -42,7 +42,7 @@ int slide_line(int *line, size_t size, int direction)
             {
                 line[i] *= 2;
                 line[i + 1] = 0;
-                i++; /* skip next */
+                i++;
             }
         }
 
@@ -82,35 +82,6 @@ int slide_line(int *line, size_t size, int direction)
             }
         }
 
-    /* Step 2: merge */
-    for (i = size - 1; i > 0; i--)
-    {
-        if (line[i] != 0 && line[i] == line[i - 1])
-        {
-            line[i] *= 2;
-            line[i - 1] = 0;
-            i--;
-        }
-    }
-
-    /* Step 3: shift again */
-    for (i = size - 1; i > 0; i--)
-    {
-        if (line[i] == 0)
-        {
-            for (j = i; j > 0; j--)
-            {
-                if (line[j - 1] != 0)
-                {
-                    line[i] = line[j - 1];
-                    line[j - 1] = 0;
-                    break;
-                }
-            }
-        }
-    }
-}
-
         /* Step 2: merge */
         for (i = size - 1; i > 0; i--)
         {
@@ -118,21 +89,21 @@ int slide_line(int *line, size_t size, int direction)
             {
                 line[i] *= 2;
                 line[i - 1] = 0;
-                i--; /* skip next */
+                i--;
             }
         }
 
         /* Step 3: shift again */
-        for (i = size; i-- > 0;)
+        for (i = size - 1; i > 0; i--)
         {
             if (line[i] == 0)
             {
-                for (j = i; j-- > 0;)
+                for (j = i; j > 0; j--)
                 {
-                    if (line[j] != 0)
+                    if (line[j - 1] != 0)
                     {
-                        line[i] = line[j];
-                        line[j] = 0;
+                        line[i] = line[j - 1];
+                        line[j - 1] = 0;
                         break;
                     }
                 }
