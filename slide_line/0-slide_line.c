@@ -66,21 +66,50 @@ int slide_line(int *line, size_t size, int direction)
     else /* SLIDE_RIGHT */
     {
         /* Step 1: shift right */
-        for (i = size; i-- > 0;)
+        for (i = size - 1; i > 0; i--)
         {
             if (line[i] == 0)
             {
-                for (j = i; j-- > 0;)
+                for (j = i; j > 0; j--)
                 {
-                    if (line[j] != 0)
+                    if (line[j - 1] != 0)
                     {
-                        line[i] = line[j];
-                        line[j] = 0;
+                        line[i] = line[j - 1];
+                        line[j - 1] = 0;
                         break;
                     }
                 }
             }
         }
+
+    /* Step 2: merge */
+    for (i = size - 1; i > 0; i--)
+    {
+        if (line[i] != 0 && line[i] == line[i - 1])
+        {
+            line[i] *= 2;
+            line[i - 1] = 0;
+            i--;
+        }
+    }
+
+    /* Step 3: shift again */
+    for (i = size - 1; i > 0; i--)
+    {
+        if (line[i] == 0)
+        {
+            for (j = i; j > 0; j--)
+            {
+                if (line[j - 1] != 0)
+                {
+                    line[i] = line[j - 1];
+                    line[j - 1] = 0;
+                    break;
+                }
+            }
+        }
+    }
+}
 
         /* Step 2: merge */
         for (i = size - 1; i > 0; i--)
