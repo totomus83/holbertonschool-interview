@@ -18,6 +18,9 @@ typedef struct skiplist_s
     struct skiplist_s *express;
 } skiplist_t;
 
+/* Required function prototypes */
 skiplist_t *linear_skip(skiplist_t *list, int value);
+skiplist_t *create_skiplist(int *array, size_t size);
+void free_skiplist(skiplist_t *list);
 
 #endif /* SEARCH_H */
