@@ -25,3 +25,4 @@ request(url, (err, res, body) => {
 
   printCharacter(0);
 });
+
