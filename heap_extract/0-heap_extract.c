@@ -17,19 +17,29 @@ static size_t tree_size(const heap_t *tree)
 /**
  * bfs_get - Returns the node at a given 1-based BFS (level-order) index
  * @root: Pointer to the root of the heap
- * @i: 1-based index (root = 1, left child = 2, right child = 3, ...)
+ * @i: 1-based index (root=1, left child=2i, right child=2i+1)
  *
  * Return: Pointer to the node at index i, or NULL
  */
 static heap_t *bfs_get(heap_t *root, size_t i)
 {
+	heap_t *parent;
+
 	if (!root || i == 0)
 		return (NULL);
 	if (i == 1)
 		return (root);
+	if (i == 2)
+		return (root->left);
+	if (i == 3)
+		return (root->right);
+
+	parent = bfs_get(root, i / 2);
+	if (!parent)
+		return (NULL);
 	if (i % 2 == 0)
-		return (bfs_get(root->left, i / 2));
-	return (bfs_get(root->right, i / 2));
+		return (parent->left);
+	return (parent->right);
 }
 
 /**
