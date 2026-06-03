@@ -39,12 +39,16 @@ int binary_recursive(int *array, int left, int right, int value)
 
 	print_array(array, left, right);
 
-	if (left == right)
-	{
-		if (array[left] == value)
-			return (left);
-		return (-1);
-	}
+    if (left == right)
+    {
+        print_array(array, left, right);
+
+        if (array[left] == value)
+            return (left);
+        return (-1);
+    }
+
+print_array(array, left, right);
 
 	mid = left + (right - left) / 2;
 
